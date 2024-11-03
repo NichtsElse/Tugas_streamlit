@@ -30,10 +30,6 @@ hour_df['temp_cluster'] = pd.cut(hour_df['temp'], bins=3, labels=['Low', 'Medium
 hour_df['hum_cluster'] = pd.cut(hour_df['hum'], bins=3, labels=['Low', 'Medium', 'High'])
 hour_df['weather_cluster'] = hour_df['temp_cluster'].astype(str) + '_' + hour_df['hum_cluster'].astype(str)
 
-# Visualisasi clustering
-st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
-
-
 # Visualisasi clustering berdasarkan pilihan filter
 st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
 
