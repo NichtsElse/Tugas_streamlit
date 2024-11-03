@@ -60,7 +60,7 @@ else:
 
 # Display Explanation
 st.write("""
-### Analisis Clustering:
+### Analisis dampak cuaca pada Pengendara:
 Berdasarkan analisis data, kondisi cuaca dengan temperatur tinggi dan kelembaban rendah (High_Low) terbukti cuaca hangat dan kering paling optimal untuk mendukung aktivitas penyewaan.
 """)
 
@@ -74,12 +74,6 @@ if st.checkbox('Tampilkan Statistik Cluster'):
 
 # Impact of Weather on Riders
 st.subheader('Dampak Cuaca pada Pengendara Biasa vs Pengendara Terdaftar')
-weather_filter = st.selectbox("Pilih Kondisi Cuaca:", ['All'] + list(hour_df['weathersit'].unique()))
-if weather_filter != 'All':
-    weather_data = hour_df[hour_df['weathersit'] == weather_filter].groupby('weathersit')[['casual', 'registered']].mean()
-else:
-    weather_data = hour_df.groupby('weathersit')[['casual', 'registered']].mean()
-
 fig2, ax = plt.subplots(figsize=(12, 6))
 labels_weather = ['Cerah', 'Berawan', 'Hujan Ringan', 'Hujan Lebat']
 x = np.arange(len(labels_weather))
@@ -97,7 +91,7 @@ st.pyplot(fig2)
 
 # Siapkan data
 season_data = hour_df.groupby('season')[['casual', 'registered']].mean()
-
+st.subheader('Dampak musim pada Pengendara Biasa vs Pengendara Terdaftar')
 # Buat figure menggunakan matplotlib
 fig4, ax = plt.subplots(figsize=(12, 6))
 
@@ -131,7 +125,7 @@ plt.tight_layout()
 st.pyplot(fig4)
 
 st.write(""" 
-    ### Analisis Clustering:
+    ### Analisis dampak musim pada Pengendara:
     Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
     pengendara kasual ataupun pengendara yang terdaftar. Hanya pada musim 
     semi pengendara cukup mengalami menurunan.
@@ -155,6 +149,6 @@ ax.set_title(f'Bulan Tersibuk untuk Penyewaan Sepeda: {workingday_choice}')
 st.pyplot(fig)
 
 st.write("""
-    ### Analisis Clustering:
+    ### Analisis Bulan Tersibuk untuk Penyewaan Sepeda:
     Bulan-bulan musim gugur dan panas adalah periode puncak untuk penyewaan sepeda, baik weekday maupun weekend.
 """)
