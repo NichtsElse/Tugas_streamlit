@@ -30,24 +30,29 @@ hour_df['temp_cluster'] = pd.cut(hour_df['temp'], bins=3, labels=['Low', 'Medium
 hour_df['hum_cluster'] = pd.cut(hour_df['hum'], bins=3, labels=['Low', 'Medium', 'High'])
 hour_df['weather_cluster'] = hour_df['temp_cluster'].astype(str) + '_' + hour_df['hum_cluster'].astype(str)
 
-# Visualisasi clustering berdasarkan pilihan filter
+# Visualisasi clustering
 st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
 
+# Buat figure
 fig3, ax = plt.subplots(figsize=(10, 6))
 
-# Plot scatter untuk cluster yang dipilih
-ax.scatter(filtered_data['temp'], 
-           filtered_data['hum'], 
-           label=cluster_option, 
-           alpha=0.6)
+# Plot scatter untuk setiap cluster
+for cluster in hour_df['weather_cluster'].unique():
+    cluster_data = hour_df[hour_df['weather_cluster'] == cluster]
+    ax.scatter(cluster_data['temp'], 
+              cluster_data['hum'], 
+              label=cluster, 
+              alpha=0.6)
 
 # Kustomisasi grafik
 ax.set_xlabel('Temperatur')
 ax.set_ylabel('Kelembaban')
-ax.set_title(f'Clustering Berdasarkan Temperatur dan Kelembaban: {cluster_option}')
+ax.set_title('Clustering Berdasarkan Temperatur dan Kelembaban')
 ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 
 plt.tight_layout()
+
+# Tampilkan plot di Streamlit
 st.pyplot(fig3)
 
 # Tambahkan penjelasan
@@ -69,26 +74,42 @@ if st.checkbox('Tampilkan Statistik Cluster'):
     cluster_stats.columns = ['Jumlah Data', 'Rata-rata Penyewaan', 'Standar Deviasi']
     st.dataframe(cluster_stats)
 
+# Visualisasi clustering
+st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
+
+# Siapkan data
+weather_data = hour_df.groupby('weathersit')[['casual', 'registered']].mean()
+
+# Buat figure baru
+fig2, ax = plt.subplots(figsize=(12, 6))
 
 # Definisikan labels untuk kondisi cuaca
 labels_weather = ['Cerah', 'Berawan', 'Hujan Ringan', 'Hujan Lebat']
-# Dropdown untuk filter kondisi cuaca
-weather_option = st.selectbox('Pilih Kondisi Cuaca:', labels_weather)
 
-weather_filtered_data = hour_df[hour_df['weathersit'] == labels_weather.index(weather_option) + 1]
+# Buat bar chart
+x = np.arange(len(labels_weather))
+width = 0.35
 
-st.subheader('dampak cuaca pada pengendara kasual vs pengendara terdaftar')
-
-fig2, ax = plt.subplots(figsize=(12, 6))
-
-ax.bar(['Pengendara Biasa'], weather_filtered_data['casual'].mean(), color='#ff9999')
-ax.bar(['Pengendara Terdaftar'], weather_filtered_data['registered'].mean(), color='#66b3ff')
+ax.bar(x - width/2, weather_data['casual'], width, label='Pengendara Biasa', color='#ff9999')
+ax.bar(x + width/2, weather_data['registered'], width, label='Pengendara Terdaftar', color='#66b3ff')
 
 # Kustomisasi grafik
+ax.set_xlabel('Kondisi Cuaca')
 ax.set_ylabel('Rata-rata Jumlah Pengendara')
-ax.set_title(f'Jumlah Pengendara Berdasarkan Kondisi Cuaca: {weather_option}')
-ax.legend(['Pengendara Biasa', 'Pengendara Terdaftar'])
+ax.set_title('Perbandingan Jumlah Pengendara Berdasarkan Kondisi Cuaca')
+ax.set_xticks(x)
+ax.set_xticklabels(labels_weather, rotation=45)
+ax.legend()
 
+# Tambahkan nilai di atas bar
+for i, v in enumerate(weather_data['casual']):
+    ax.text(i - width/2, v, f'{v:.1f}', ha='center', va='bottom')
+for i, v in enumerate(weather_data['registered']):
+    ax.text(i + width/2, v, f'{v:.1f}', ha='center', va='bottom')
+
+plt.tight_layout()
+
+# Tampilkan plot di Streamlit
 st.pyplot(fig2)
 
 # Tambahkan penjelasan
@@ -100,23 +121,39 @@ pengendara kasual menurun secara signifikan saat cuaca memburuk sebanyak.
 """)
 
 
-st.subheader('dampak musim pada pengendara kasual vs pengendara terdaftar')
-# Definisikan labels untuk musim di awal
-labels_season = ['Musim Semi', 'Musim Panas', 'Musim Gugur', 'Musim Dingin']
-# Filter untuk musim
-season_option = st.selectbox('Pilih Musim:', labels_season)
-season_filtered_data = hour_df[hour_df['season'] == labels_season.index(season_option) + 1]
+# Siapkan data
+season_data = hour_df.groupby('season')[['casual', 'registered']].mean()
 
+# Buat figure menggunakan matplotlib
 fig4, ax = plt.subplots(figsize=(12, 6))
 
-ax.bar(['Pengendara Biasa'], season_filtered_data['casual'].mean(), color='#ff9999')
-ax.bar(['Pengendara Terdaftar'], season_filtered_data['registered'].mean(), color='#66b3ff')
+# Definisikan labels untuk musim
+labels_season = ['Musim Semi', 'Musim Panas', 'Musim Gugur', 'Musim Dingin']
+
+# Buat bar chart
+x = np.arange(len(labels_season))
+width = 0.35
+
+ax.bar(x - width/2, season_data['casual'], width, label='Pengendara Biasa', color='#ff9999')
+ax.bar(x + width/2, season_data['registered'], width, label='Pengendara Terdaftar', color='#66b3ff')
 
 # Kustomisasi grafik
+ax.set_xlabel('Musim')
 ax.set_ylabel('Rata-rata Jumlah Pengendara')
-ax.set_title(f'Jumlah Pengendara Berdasarkan Musim: {season_option}')
-ax.legend(['Pengendara Biasa', 'Pengendara Terdaftar'])
+ax.set_title('Perbandingan Jumlah Pengendara Berdasarkan Musim')
+ax.set_xticks(x)
+ax.set_xticklabels(labels_season, rotation=45)
+ax.legend()
 
+# Tambahkan nilai di atas bar
+for i, v in enumerate(season_data['casual']):
+    ax.text(i - width/2, v, f'{v:.1f}', ha='center', va='bottom')
+for i, v in enumerate(season_data['registered']):
+    ax.text(i + width/2, v, f'{v:.1f}', ha='center', va='bottom')
+
+plt.tight_layout()
+
+# Tampilkan plot di Streamlit
 st.pyplot(fig4)
 
 st.write(""" 
@@ -127,20 +164,18 @@ st.write("""
     """
     )
 
-st.subheader('bulan tersibuk untuk penyewaan sepeda')
-
+# Visualisasikan bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend
 fig, ax = plt.subplots(figsize=(10, 6))
+month_weekday = hour_df[hour_df['workingday'] == 1].groupby('mnth')['cnt'].mean()
+month_weekend = hour_df[hour_df['workingday'] == 0].groupby('mnth')['cnt'].mean()
 
-if day_option == 'Weekday':
-    month_data = month_weekday
-else:
-    month_data = month_weekend
+sns.lineplot(x=month_weekday.index, y=month_weekday.values, label='Weekday', marker='o')
+sns.lineplot(x=month_weekend.index, y=month_weekend.values, label='Weekend', marker='o')
 
-sns.lineplot(x=month_data.index, y=month_data.values, marker='o')
+st.subheader('Hourly Trend of Bike Rentals')
 ax.set_xlabel('Bulan (1: Januari, 12: Desember)')
 ax.set_ylabel('Jumlah Rata-rata Pengendara')
-ax.set_title(f'Bulan Tersibuk untuk Penyewaan Sepeda: {day_option}')
-
+ax.set_title('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
 st.pyplot(fig)
 
 st.write("""    
