@@ -13,7 +13,7 @@ hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
 st.header('Insights Analisis Data: Bike Sharing Dataset')
 
 
-st.subheader(' dampak cuaca dan musim pada pengendara biasa vs pengendara terdaftar')
+
 col1, col2 = st.columns(2)
 with col1:
     total_registered = hour_df.registered.sum()
@@ -74,8 +74,8 @@ if st.checkbox('Tampilkan Statistik Cluster'):
     cluster_stats.columns = ['Jumlah Data', 'Rata-rata Penyewaan', 'Standar Deviasi']
     st.dataframe(cluster_stats)
 
-# Visualisasi clustering
-st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
+# Visualisasi 
+st.subheader(' dampak cuaca dan musim pada pengendara biasa vs pengendara terdaftar')
 
 # Siapkan data
 weather_data = hour_df.groupby('weathersit')[['casual', 'registered']].mean()
@@ -123,7 +123,7 @@ pengendara kasual menurun secara signifikan saat cuaca memburuk sebanyak.
 
 # Siapkan data
 season_data = hour_df.groupby('season')[['casual', 'registered']].mean()
-
+st.subheader(' dampak musim dan musim pada pengendara biasa vs pengendara terdaftar')
 # Buat figure menggunakan matplotlib
 fig4, ax = plt.subplots(figsize=(12, 6))
 
@@ -164,6 +164,7 @@ st.write("""
     """
     )
 
+st.subheader('bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend')
 # Visualisasikan bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend
 fig, ax = plt.subplots(figsize=(10, 6))
 month_weekday = hour_df[hour_df['workingday'] == 1].groupby('mnth')['cnt'].mean()
