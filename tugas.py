@@ -29,26 +29,39 @@ hour_df['weather_cluster'] = hour_df['temp_cluster'].astype(str) + '_' + hour_df
 
 # Dropdown to Select Cluster
 st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
-selected_cluster = st.selectbox("Pilih Cluster Cuaca:", hour_df['weather_cluster'].unique())
+selected_cluster = st.selectbox("Pilih Cluster Cuaca:", ['All'] + list(hour_df['weather_cluster'].unique()))
 
-# Filter data berdasarkan cluster yang dipilih
-filtered_data = hour_df[hour_df['weather_cluster'] == selected_cluster]
+if selected_cluster == 'All':
+    # Show all clusters in a scatter plot
+    fig3, ax = plt.subplots(figsize=(10, 6))
+    for cluster in hour_df['weather_cluster'].unique():
+        cluster_data = hour_df[hour_df['weather_cluster'] == cluster]
+        ax.scatter(cluster_data['temp'], cluster_data['hum'], label=cluster, alpha=0.6)
+    ax.set_xlabel('Temperatur')
+    ax.set_ylabel('Kelembaban')
+    ax.set_title('Clustering Berdasarkan Temperatur dan Kelembaban')
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
+    st.pyplot(fig3)
+else:
+    # Filter data berdasarkan cluster yang dipilih
+    filtered_data = hour_df[hour_df['weather_cluster'] == selected_cluster]
 
-# Visualize Selected Cluster
-fig3, ax = plt.subplots(figsize=(10, 6))
-ax.scatter(filtered_data['temp'], filtered_data['hum'], label=selected_cluster, alpha=0.6)
-ax.set_xlabel('Temperatur')
-ax.set_ylabel('Kelembaban')
-ax.set_title(f'Clustering Berdasarkan Temperatur dan Kelembaban - {selected_cluster}')
-ax.legend()
-st.pyplot(fig3)
+    # Tampilkan data dalam bentuk bar chart untuk jumlah pengendara
+    fig, ax = plt.subplots(figsize=(8, 6))
+    casual_mean = filtered_data['casual'].mean()
+    registered_mean = filtered_data['registered'].mean()
+    ax.bar(['Casual', 'Registered'], [casual_mean, registered_mean], color=['#ff9999', '#66b3ff'])
+    ax.set_ylabel('Rata-rata Jumlah Pengendara')
+    ax.set_title(f'Rata-rata Pengendara di Cluster {selected_cluster}')
+    for i, v in enumerate([casual_mean, registered_mean]):
+        ax.text(i, v, f'{v:.1f}', ha='center', va='bottom')
+    st.pyplot(fig)
 
 # Display Explanation
 st.write("""
 ### Analisis Clustering:
-Berdasarkan analisis data, kondisi cuaca dengan temperatur tinggi dan
-kelembaban rendah (High_Low) terbukti cuaca hangat dan kering paling
-optimal untuk mendukung aktivitas penyewaan.
+Berdasarkan analisis data, kondisi cuaca dengan temperatur tinggi dan kelembaban rendah (High_Low) terbukti cuaca hangat dan kering paling optimal untuk mendukung aktivitas penyewaan.
 """)
 
 # Show Cluster Statistics Optionally
@@ -57,6 +70,7 @@ if st.checkbox('Tampilkan Statistik Cluster'):
     cluster_stats = hour_df.groupby('weather_cluster')['cnt'].agg(['count', 'mean', 'std']).round(2)
     cluster_stats.columns = ['Jumlah Data', 'Rata-rata Penyewaan', 'Standar Deviasi']
     st.dataframe(cluster_stats)
+
 
 # Impact of Weather on Riders
 st.subheader('Dampak Cuaca pada Pengendara Biasa vs Pengendara Terdaftar')
