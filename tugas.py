@@ -151,7 +151,6 @@ plt.tight_layout()
 # Tampilkan plot di Streamlit
 st.pyplot(fig4)
 
-with st.expander("See explanation"):
     st.write(""" 
         ### Analisis Clustering:
         Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
