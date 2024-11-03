@@ -162,6 +162,11 @@ st.write("""
     """
     )
 
+
+# Inisialisasi data untuk weekday dan weekend berdasarkan bulan
+month_weekday = hour_df[hour_df['workingday'] == 1].groupby('mnth')['cnt'].mean()
+month_weekend = hour_df[hour_df['workingday'] == 0].groupby('mnth')['cnt'].mean()
+
 # Filter untuk hari kerja atau akhir pekan
 day_option = st.selectbox('Pilih Jenis Hari:', ['Weekday', 'Weekend'])
 
