@@ -58,9 +58,13 @@ st.pyplot(fig3)
 # Tambahkan penjelasan
 st.write("""
 ### Analisis Clustering:
-- Setiap titik mewakili kombinasi temperatur dan kelembaban pada waktu tertentu
-- Cluster dibagi menjadi 9 kelompok berdasarkan kombinasi tingkat temperatur (Low/Medium/High) dan kelembaban (Low/Medium/High)
-- Pola persebaran menunjukkan hubungan antara temperatur dan kelembaban
+Berdasarkan analisis data, kondisi cuaca dengan temperatur tinggi dan
+kelembaban rendah (High_Low) terbukti Cuaca Hangat dan Kering paling
+optimal untuk mendukung aktivitas penyewaan. Kondisi ini diikuti oleh cuaca 
+dengan temperatur tinggi dan kelembaban sedang (High_Medium) yang juga menunjukkan
+performa baik. Sebaliknya, Cuaca dengan temperatur rendah, terutama yang disertai 
+kelembaban tinggi (Low_High), cenderung berkontribusi pada angka penyewaan yang lebih 
+rendah, kemungkinan disebabkan oleh kondisi yang kurang ideal untuk aktivitas luar ruangan.
 """)
 
 # Tambahkan statistik cluster
@@ -109,10 +113,9 @@ st.pyplot(fig2)
 # Tambahkan penjelasan
 st.write("""
 ### Analisis Kondisi Cuaca:
-- Jumlah pengendara (baik biasa maupun terdaftar) tertinggi terjadi saat cuaca cerah
-- Terjadi penurunan signifikan pada jumlah pengendara saat hujan
-- Pengendara terdaftar cenderung lebih konsisten dalam bersepeda meskipun cuaca kurang baik
-- Hujan lebat memiliki dampak paling besar dalam menurunkan jumlah pengendara
+Kondisi cuaca secara signifikan mempengaruhi pengendara kasual 
+lebih banyak daripada pengendara yang terdaftar.Jumlah rata-rata 
+pengendara kasual menurun secara signifikan saat cuaca memburuk sebanyak.
 """)
 
 
