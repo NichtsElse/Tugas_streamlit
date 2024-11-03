@@ -77,7 +77,8 @@ if st.checkbox('Tampilkan Statistik Cluster'):
     st.dataframe(cluster_stats)
 
 
-
+# Definisikan labels untuk kondisi cuaca
+labels_weather = ['Cerah', 'Berawan', 'Hujan Ringan', 'Hujan Lebat']
 # Filter untuk kondisi cuaca
 weather_option = st.selectbox('Pilih Kondisi Cuaca:', labels_weather)
 weather_filtered_data = hour_df[hour_df['weathersit'] == labels_weather.index(weather_option) + 1]
