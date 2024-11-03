@@ -162,18 +162,21 @@ st.write("""
     """
     )
 
-# Visualisasikan bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend
+# Filter untuk hari kerja atau akhir pekan
+day_option = st.selectbox('Pilih Jenis Hari:', ['Weekday', 'Weekend'])
+
 fig, ax = plt.subplots(figsize=(10, 6))
-month_weekday = hour_df[hour_df['workingday'] == 1].groupby('mnth')['cnt'].mean()
-month_weekend = hour_df[hour_df['workingday'] == 0].groupby('mnth')['cnt'].mean()
 
-sns.lineplot(x=month_weekday.index, y=month_weekday.values, label='Weekday', marker='o')
-sns.lineplot(x=month_weekend.index, y=month_weekend.values, label='Weekend', marker='o')
+if day_option == 'Weekday':
+    month_data = month_weekday
+else:
+    month_data = month_weekend
 
-st.subheader('Hourly Trend of Bike Rentals')
+sns.lineplot(x=month_data.index, y=month_data.values, marker='o')
 ax.set_xlabel('Bulan (1: Januari, 12: Desember)')
 ax.set_ylabel('Jumlah Rata-rata Pengendara')
-ax.set_title('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
+ax.set_title(f'Bulan Tersibuk untuk Penyewaan Sepeda: {day_option}')
+
 st.pyplot(fig)
 
 st.write("""    
