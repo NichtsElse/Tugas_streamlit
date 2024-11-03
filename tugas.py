@@ -79,8 +79,9 @@ if st.checkbox('Tampilkan Statistik Cluster'):
 
 # Definisikan labels untuk kondisi cuaca
 labels_weather = ['Cerah', 'Berawan', 'Hujan Ringan', 'Hujan Lebat']
-# Filter untuk kondisi cuaca
+# Dropdown untuk filter kondisi cuaca
 weather_option = st.selectbox('Pilih Kondisi Cuaca:', labels_weather)
+
 weather_filtered_data = hour_df[hour_df['weathersit'] == labels_weather.index(weather_option) + 1]
 
 st.subheader('dampak cuaca pada pengendara kasual vs pengendara terdaftar')
