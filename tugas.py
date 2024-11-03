@@ -118,7 +118,8 @@ lebih banyak daripada pengendara yang terdaftar.Jumlah rata-rata
 pengendara kasual menurun secara signifikan saat cuaca memburuk sebanyak.
 """)
 
-
+# Definisikan labels untuk musim di awal
+labels_season = ['Musim Semi', 'Musim Panas', 'Musim Gugur', 'Musim Dingin']
 # Filter untuk musim
 season_option = st.selectbox('Pilih Musim:', labels_season)
 season_filtered_data = hour_df[hour_df['season'] == labels_season.index(season_option) + 1]
