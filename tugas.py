@@ -183,3 +183,24 @@ st.write("""
      dari weekend atau weekday.
     """
 )
+
+
+
+# Adding a filter for clusters
+st.subheader('Interactive Analysis Table: Filter by Cluster, Season, or Weather Conditions')
+
+# Filter by weather cluster
+cluster_option = st.selectbox('Select Cluster:', hour_df['weather_cluster'].unique(), index=0)
+filtered_df = hour_df[hour_df['weather_cluster'] == cluster_option]
+
+# Filter by season
+season_option = st.selectbox('Select Season:', hour_df['season'].unique())
+filtered_df = filtered_df[filtered_df['season'] == season_option]
+
+# Filter by weather condition
+weather_option = st.selectbox('Select Weather Condition:', hour_df['weathersit'].unique())
+filtered_df = filtered_df[filtered_df['weathersit'] == weather_option]
+
+# Display filtered results
+st.write("### Filtered Analysis Results")
+st.dataframe(filtered_df[['dteday', 'season', 'weathersit', 'temp', 'hum', 'cnt']])
