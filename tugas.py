@@ -74,7 +74,7 @@ if st.checkbox('Tampilkan Statistik Cluster'):
 
 # Impact of Weather on Riders
 # Siapkan data
-season_data = hour_df.groupby('weathersit')[['casual', 'registered']].mean()
+weather_data = hour_df.groupby('weathersit')[['casual', 'registered']].mean()
 st.subheader('Dampak Cuaca pada Pengendara Biasa vs Pengendara Terdaftar')
 fig2, ax = plt.subplots(figsize=(12, 6))
 labels_weather = ['Cerah', 'Berawan', 'Hujan Ringan', 'Hujan Lebat']
