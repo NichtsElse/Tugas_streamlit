@@ -63,43 +63,6 @@ st.write("""
 - Pola persebaran menunjukkan hubungan antara temperatur dan kelembaban
 """)
 
-# Tambahkan filter dan interaktivitas
-st.sidebar.header('Pengaturan Clustering')
-
-# Filter cluster yang ingin ditampilkan
-selected_clusters = st.sidebar.multiselect(
-    'Pilih Cluster yang Ditampilkan',
-    options=sorted(hour_df['weather_cluster'].unique()),
-    default=hour_df['weather_cluster'].unique()
-)
-
-# Pengaturan tampilan
-col1, col2 = st.columns(2)
-with col1:
-    point_size = st.slider('Ukuran Titik', 10, 100, 50)
-with col2:
-    opacity = st.slider('Transparansi', 0.1, 1.0, 0.6)
-
-# Visualisasi dengan filter yang diterapkan
-if selected_clusters:
-    fig4, ax = plt.subplots(figsize=(10, 6))
-    
-    for cluster in selected_clusters:
-        cluster_data = hour_df[hour_df['weather_cluster'] == cluster]
-        ax.scatter(cluster_data['temp'], 
-                  cluster_data['hum'], 
-                  label=cluster, 
-                  alpha=opacity,
-                  s=point_size)
-    
-    ax.set_xlabel('Temperatur')
-    ax.set_ylabel('Kelembaban')
-    ax.set_title('Clustering Berdasarkan Temperatur dan Kelembaban (Filtered)')
-    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-    
-    plt.tight_layout()
-    st.pyplot(fig4)
-
 # Tambahkan statistik cluster
 if st.checkbox('Tampilkan Statistik Cluster'):
     st.write("### Statistik per Cluster")
@@ -107,8 +70,7 @@ if st.checkbox('Tampilkan Statistik Cluster'):
     cluster_stats.columns = ['Jumlah Data', 'Rata-rata Penyewaan', 'Standar Deviasi']
     st.dataframe(cluster_stats)
 
-color_map = st.sidebar.selectbox('Color Map', plt.colormaps())
-    
+
 # Siapkan data
 weather_data = hour_df.groupby('weathersit')[['casual', 'registered']].mean()
 
@@ -153,19 +115,12 @@ st.write("""
 - Hujan lebat memiliki dampak paling besar dalam menurunkan jumlah pengendara
 """)
 
-# Tambahkan filter cuaca di sidebar
-st.sidebar.header('Filter Cuaca')
-selected_weather = st.sidebar.multiselect(
-    'Pilih Kondisi Cuaca',
-    options=labels_weather,
-    default=labels_weather
-)
 
 # Siapkan data
 season_data = hour_df.groupby('season')[['casual', 'registered']].mean()
 
 # Buat figure menggunakan matplotlib
-fig, ax = plt.subplots(figsize=(12, 6))
+fig4, ax = plt.subplots(figsize=(12, 6))
 
 # Definisikan labels untuk musim
 labels_season = ['Musim Semi', 'Musim Panas', 'Musim Gugur', 'Musim Dingin']
@@ -193,6 +148,9 @@ for i, v in enumerate(season_data['registered']):
 
 plt.tight_layout()
 
+# Tampilkan plot di Streamlit
+st.pyplot(fig4)
+
 with st.expander("See explanation"):
     st.write(
         """Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
@@ -200,13 +158,6 @@ with st.expander("See explanation"):
         semi pengendara cukup mengalami menurunan.
         """
     )
-# Tambahkan filter cuaca di sidebar
-st.sidebar.header('Filter musim')
-selected_season = st.sidebar.multiselect(
-    'Pilih Kondisi musim',
-    options=labels_season,
-    default=labels_season
-)    
 
 # Visualisasikan bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -222,10 +173,9 @@ ax.set_ylabel('Jumlah Rata-rata Pengendara')
 ax.set_title('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
 st.pyplot(fig)
 
-with st.expander("See explanation"):
-    st.write(
-        """ Bulan-bulan musim gugur dan panas adalah 
-        periode puncak untuk penyewaan sepeda, terlepas 
-        dari weekend atau weekday.
-        """
-    )
+st.write(
+    """ Bulan-bulan musim gugur dan panas adalah 
+    periode puncak untuk penyewaan sepeda, terlepas 
+     dari weekend atau weekday.
+    """
+)
