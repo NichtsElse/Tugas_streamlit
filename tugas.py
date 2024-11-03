@@ -152,8 +152,9 @@ plt.tight_layout()
 st.pyplot(fig4)
 
 with st.expander("See explanation"):
-    st.write(
-        """Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
+    st.write(""" 
+        ### Analisis Clustering:
+        Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
         pengendara kasual ataupun pengendara yang terdaftar. Hanya pada musim 
         semi pengendara cukup mengalami menurunan.
         """
@@ -173,8 +174,9 @@ ax.set_ylabel('Jumlah Rata-rata Pengendara')
 ax.set_title('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
 st.pyplot(fig)
 
-st.write(
-    """ Bulan-bulan musim gugur dan panas adalah 
+st.write("""    
+    ### Analisis Clustering:
+    Bulan-bulan musim gugur dan panas adalah 
     periode puncak untuk penyewaan sepeda, terlepas 
      dari weekend atau weekday.
     """
