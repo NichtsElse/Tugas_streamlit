@@ -33,9 +33,6 @@ hour_df['weather_cluster'] = hour_df['temp_cluster'].astype(str) + '_' + hour_df
 # Visualisasi clustering
 st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
 
-# Filter untuk cluster
-cluster_option = st.selectbox('Pilih Cluster Cuaca:', hour_df['weather_cluster'].unique(), index=0)
-filtered_data = hour_df[hour_df['weather_cluster'] == cluster_option]
 
 # Visualisasi clustering berdasarkan pilihan filter
 st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
