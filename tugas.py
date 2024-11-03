@@ -119,39 +119,20 @@ pengendara kasual menurun secara signifikan saat cuaca memburuk sebanyak.
 """)
 
 
-# Siapkan data
-season_data = hour_df.groupby('season')[['casual', 'registered']].mean()
+# Filter untuk musim
+season_option = st.selectbox('Pilih Musim:', labels_season)
+season_filtered_data = hour_df[hour_df['season'] == labels_season.index(season_option) + 1]
 
-# Buat figure menggunakan matplotlib
 fig4, ax = plt.subplots(figsize=(12, 6))
 
-# Definisikan labels untuk musim
-labels_season = ['Musim Semi', 'Musim Panas', 'Musim Gugur', 'Musim Dingin']
-
-# Buat bar chart
-x = np.arange(len(labels_season))
-width = 0.35
-
-ax.bar(x - width/2, season_data['casual'], width, label='Pengendara Biasa', color='#ff9999')
-ax.bar(x + width/2, season_data['registered'], width, label='Pengendara Terdaftar', color='#66b3ff')
+ax.bar(['Pengendara Biasa'], season_filtered_data['casual'].mean(), color='#ff9999')
+ax.bar(['Pengendara Terdaftar'], season_filtered_data['registered'].mean(), color='#66b3ff')
 
 # Kustomisasi grafik
-ax.set_xlabel('Musim')
 ax.set_ylabel('Rata-rata Jumlah Pengendara')
-ax.set_title('Perbandingan Jumlah Pengendara Berdasarkan Musim')
-ax.set_xticks(x)
-ax.set_xticklabels(labels_season, rotation=45)
-ax.legend()
+ax.set_title(f'Jumlah Pengendara Berdasarkan Musim: {season_option}')
+ax.legend(['Pengendara Biasa', 'Pengendara Terdaftar'])
 
-# Tambahkan nilai di atas bar
-for i, v in enumerate(season_data['casual']):
-    ax.text(i - width/2, v, f'{v:.1f}', ha='center', va='bottom')
-for i, v in enumerate(season_data['registered']):
-    ax.text(i + width/2, v, f'{v:.1f}', ha='center', va='bottom')
-
-plt.tight_layout()
-
-# Tampilkan plot di Streamlit
 st.pyplot(fig4)
 
 st.write(""" 
