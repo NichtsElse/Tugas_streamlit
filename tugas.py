@@ -164,7 +164,6 @@ pengendara kasual menurun secara signifikan saat cuaca memburuk sebanyak.
 """)
 
 
-st.subheader('bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend')
 # Monthly Trend Comparison
 st.subheader('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
 workingday_choice = st.radio("Pilih Hari:", ['Weekday', 'Weekend'])
