@@ -89,7 +89,12 @@ ax.set_xticks(x)
 ax.set_xticklabels(labels_weather, rotation=45)
 ax.legend()
 st.pyplot(fig2)
-
+st.write(""" 
+    ### Analisis dampak cuaca pada Pengendara:
+    Kondisi cuaca secara signifikan mempengaruhi pengendara kasual lebih 
+    banyak daripada pengendara yang terdaftar.Jumlah rata-rata pengendara kasual 
+    menurun secara signifikan saat cuaca memburuk sebanyak. 
+    """)
 
 # Siapkan data
 season_data = hour_df.groupby('season')[['casual', 'registered']].mean()
@@ -131,8 +136,7 @@ st.write("""
     Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
     pengendara kasual ataupun pengendara yang terdaftar. Hanya pada musim 
     semi pengendara cukup mengalami menurunan.
-    """
-    )
+    """)
 
 
 # Monthly Trend Comparison
