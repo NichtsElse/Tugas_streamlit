@@ -94,6 +94,51 @@ ax.set_xticklabels(labels_weather, rotation=45)
 ax.legend()
 st.pyplot(fig2)
 
+
+# Siapkan data
+season_data = hour_df.groupby('season')[['casual', 'registered']].mean()
+
+# Buat figure menggunakan matplotlib
+fig4, ax = plt.subplots(figsize=(12, 6))
+
+# Definisikan labels untuk musim
+labels_season = ['Musim Semi', 'Musim Panas', 'Musim Gugur', 'Musim Dingin']
+
+# Buat bar chart
+x = np.arange(len(labels_season))
+width = 0.35
+
+ax.bar(x - width/2, season_data['casual'], width, label='Pengendara Biasa', color='#ff9999')
+ax.bar(x + width/2, season_data['registered'], width, label='Pengendara Terdaftar', color='#66b3ff')
+
+# Kustomisasi grafik
+ax.set_xlabel('Musim')
+ax.set_ylabel('Rata-rata Jumlah Pengendara')
+ax.set_title('Perbandingan Jumlah Pengendara Berdasarkan Musim')
+ax.set_xticks(x)
+ax.set_xticklabels(labels_season, rotation=45)
+ax.legend()
+
+# Tambahkan nilai di atas bar
+for i, v in enumerate(season_data['casual']):
+    ax.text(i - width/2, v, f'{v:.1f}', ha='center', va='bottom')
+for i, v in enumerate(season_data['registered']):
+    ax.text(i + width/2, v, f'{v:.1f}', ha='center', va='bottom')
+
+plt.tight_layout()
+
+# Tampilkan plot di Streamlit
+st.pyplot(fig4)
+
+st.write(""" 
+    ### Analisis Clustering:
+    Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
+    pengendara kasual ataupun pengendara yang terdaftar. Hanya pada musim 
+    semi pengendara cukup mengalami menurunan.
+    """
+    )
+
+
 # Monthly Trend Comparison
 st.subheader('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
 workingday_choice = st.radio("Pilih Hari:", ['Weekday', 'Weekend'])
