@@ -173,7 +173,6 @@ month_weekend = hour_df[hour_df['workingday'] == 0].groupby('mnth')['cnt'].mean(
 sns.lineplot(x=month_weekday.index, y=month_weekday.values, label='Weekday', marker='o')
 sns.lineplot(x=month_weekend.index, y=month_weekend.values, label='Weekend', marker='o')
 
-st.subheader('Hourly Trend of Bike Rentals')
 ax.set_xlabel('Bulan (1: Januari, 12: Desember)')
 ax.set_ylabel('Jumlah Rata-rata Pengendara')
 ax.set_title('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
