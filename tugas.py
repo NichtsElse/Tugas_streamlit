@@ -110,7 +110,7 @@ plt.tight_layout()
 st.pyplot(fig4)
 
 st.write(""" 
-    ### Analisis Clustering:
+    ### Analisis kondisi musim:
     Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
     pengendara kasual ataupun pengendara yang terdaftar. Hanya pada musim 
     semi pengendara cukup mengalami menurunan.
@@ -165,21 +165,22 @@ pengendara kasual menurun secara signifikan saat cuaca memburuk sebanyak.
 
 
 st.subheader('bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend')
-# Visualisasikan bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend
+# Monthly Trend Comparison
+st.subheader('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
+workingday_choice = st.radio("Pilih Hari:", ['Weekday', 'Weekend'])
+if workingday_choice == 'Weekday':
+    month_data = hour_df[hour_df['workingday'] == 1].groupby('mnth')['cnt'].mean()
+else:
+    month_data = hour_df[hour_df['workingday'] == 0].groupby('mnth')['cnt'].mean()
+
 fig, ax = plt.subplots(figsize=(10, 6))
-month_weekday = hour_df[hour_df['workingday'] == 1].groupby('mnth')['cnt'].mean()
-month_weekend = hour_df[hour_df['workingday'] == 0].groupby('mnth')['cnt'].mean()
-
-sns.lineplot(x=month_weekday.index, y=month_weekday.values, label='Weekday', marker='o')
-sns.lineplot(x=month_weekend.index, y=month_weekend.values, label='Weekend', marker='o')
-
+sns.lineplot(x=month_data.index, y=month_data.values, marker='o', label=workingday_choice)
 ax.set_xlabel('Bulan (1: Januari, 12: Desember)')
 ax.set_ylabel('Jumlah Rata-rata Pengendara')
-ax.set_title('Bulan Tersibuk untuk Penyewaan Sepeda: Hari Kerja vs Akhir Pekan')
+ax.set_title(f'Bulan Tersibuk untuk Penyewaan Sepeda: {workingday_choice}')
 st.pyplot(fig)
-
 st.write("""    
-    ### Analisis Clustering:
+    ### Analisis bulan tersibuk:
     Bulan-bulan musim gugur dan panas adalah 
     periode puncak untuk penyewaan sepeda, terlepas 
      dari weekend atau weekday.
