@@ -76,25 +76,33 @@ season_data = hour_df[hour_df['season'].isin(season_options)].groupby('season')[
 
 # Weather impact chart
 st.subheader('Pengaruh Kondisi Cuaca pada Pengendara')
-fig2, ax = plt.subplots(figsize=(12, 6))
-labels_weather = ['Cerah', 'Berawan', 'Hujan Ringan', 'Hujan Lebat']
-x = np.arange(len(labels_weather))
-width = 0.35
-ax.bar(x - width/2, weather_data['casual'], width, label='Pengendara Biasa', color='#ff9999')
-ax.bar(x + width/2, weather_data['registered'], width, label='Pengendara Terdaftar', color='#66b3ff')
-ax.set_xlabel('Kondisi Cuaca')
-ax.set_ylabel('Rata-rata Jumlah Pengendara')
-ax.set_title('Perbandingan Jumlah Pengendara Berdasarkan Kondisi Cuaca')
-ax.set_xticks(x)
-ax.set_xticklabels(labels_weather, rotation=45)
-ax.legend()
-for i, v in enumerate(weather_data['casual']):
-    ax.text(i - width/2, v, f'{v:.1f}', ha='center', va='bottom')
-for i, v in enumerate(weather_data['registered']):
-    ax.text(i + width/2, v, f'{v:.1f}', ha='center', va='bottom')
-plt.tight_layout()
-st.pyplot(fig2)
+if not weather_data.empty:
+    # Sesuaikan jumlah labels cuaca sesuai dengan data yang telah difilter
+    labels_weather = ['Cerah', 'Berawan', 'Hujan Ringan', 'Hujan Lebat'][:len(weather_data)]
+    x = np.arange(len(labels_weather))
 
+    fig2, ax = plt.subplots(figsize=(12, 6))
+    ax.bar(x - width/2, weather_data['casual'], width, label='Pengendara Biasa', color='#ff9999')
+    ax.bar(x + width/2, weather_data['registered'], width, label='Pengendara Terdaftar', color='#66b3ff')
+
+    # Kustomisasi grafik
+    ax.set_xlabel('Kondisi Cuaca')
+    ax.set_ylabel('Rata-rata Jumlah Pengendara')
+    ax.set_title('Perbandingan Jumlah Pengendara Berdasarkan Kondisi Cuaca')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels_weather, rotation=45)
+    ax.legend()
+
+    # Tambahkan nilai di atas bar
+    for i, v in enumerate(weather_data['casual']):
+        ax.text(i - width/2, v, f'{v:.1f}', ha='center', va='bottom')
+    for i, v in enumerate(weather_data['registered']):
+        ax.text(i + width/2, v, f'{v:.1f}', ha='center', va='bottom')
+
+    plt.tight_layout()
+    st.pyplot(fig2)
+else:
+    st.write("Tidak ada data yang cocok dengan filter yang dipilih.")
 st.write("""
 ### Analisis Kondisi Cuaca:
 Cuaca buruk memiliki dampak lebih besar pada pengendara kasual dibandingkan pengendara terdaftar.
