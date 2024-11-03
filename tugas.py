@@ -151,12 +151,12 @@ plt.tight_layout()
 # Tampilkan plot di Streamlit
 st.pyplot(fig4)
 
-    st.write(""" 
-        ### Analisis Clustering:
-        Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
-        pengendara kasual ataupun pengendara yang terdaftar. Hanya pada musim 
-        semi pengendara cukup mengalami menurunan.
-        """
+st.write(""" 
+    ### Analisis Clustering:
+    Kondisi musim berdampak tapi tidak terlalu signifikan mempengaruhi 
+    pengendara kasual ataupun pengendara yang terdaftar. Hanya pada musim 
+    semi pengendara cukup mengalami menurunan.
+    """
     )
 
 # Visualisasikan bulan tersibuk untuk penyewaan sepeda, dengan membandingkan Weekday dan Weekend
