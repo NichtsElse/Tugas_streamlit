@@ -6,68 +6,65 @@ import numpy as np
 
 sns.set_palette("deep")
 
+# Load data
 hour_df = pd.read_csv("main_data.csv")
-
 hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
 
+# Header
 st.header('Insights Analisis Data: Bike Sharing Dataset')
 
-
-
+# Metric Columns
 col1, col2 = st.columns(2)
 with col1:
     total_registered = hour_df.registered.sum()
     st.metric("Total pengendara terdaftar", value=total_registered)
-
 with col2:
     total_casual = hour_df.casual.sum()
     st.metric("Total pengendara casual", value=total_casual)
 
-# Tambahkan setelah visualisasi sebelumnya
-
-# Buat cluster berdasarkan suhu dan kelembaban (pastikan kode ini dijalankan setelah load data)
+# Cluster Based on Temperature and Humidity
 hour_df['temp_cluster'] = pd.cut(hour_df['temp'], bins=3, labels=['Low', 'Medium', 'High'])
 hour_df['hum_cluster'] = pd.cut(hour_df['hum'], bins=3, labels=['Low', 'Medium', 'High'])
 hour_df['weather_cluster'] = hour_df['temp_cluster'].astype(str) + '_' + hour_df['hum_cluster'].astype(str)
 
-# Visualisasi clustering
+# Dropdown to Select Cluster
 st.subheader('Clustering Berdasarkan Temperatur dan Kelembaban')
+selected_cluster = st.selectbox("Pilih Cluster Cuaca:", ['All'] + list(hour_df['weather_cluster'].unique()))
 
-# Buat figure
-fig3, ax = plt.subplots(figsize=(10, 6))
+if selected_cluster == 'All':
+    # Show all clusters in a scatter plot
+    fig3, ax = plt.subplots(figsize=(10, 6))
+    for cluster in hour_df['weather_cluster'].unique():
+        cluster_data = hour_df[hour_df['weather_cluster'] == cluster]
+        ax.scatter(cluster_data['temp'], cluster_data['hum'], label=cluster, alpha=0.6)
+    ax.set_xlabel('Temperatur')
+    ax.set_ylabel('Kelembaban')
+    ax.set_title('Clustering Berdasarkan Temperatur dan Kelembaban')
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
+    st.pyplot(fig3)
+else:
+    # Filter data berdasarkan cluster yang dipilih
+    filtered_data = hour_df[hour_df['weather_cluster'] == selected_cluster]
 
-# Plot scatter untuk setiap cluster
-for cluster in hour_df['weather_cluster'].unique():
-    cluster_data = hour_df[hour_df['weather_cluster'] == cluster]
-    ax.scatter(cluster_data['temp'], 
-              cluster_data['hum'], 
-              label=cluster, 
-              alpha=0.6)
+    # Tampilkan data dalam bentuk bar chart untuk jumlah pengendara
+    fig, ax = plt.subplots(figsize=(8, 6))
+    casual_mean = filtered_data['casual'].mean()
+    registered_mean = filtered_data['registered'].mean()
+    ax.bar(['Casual', 'Registered'], [casual_mean, registered_mean], color=['#ff9999', '#66b3ff'])
+    ax.set_ylabel('Rata-rata Jumlah Pengendara')
+    ax.set_title(f'Rata-rata Pengendara di Cluster {selected_cluster}')
+    for i, v in enumerate([casual_mean, registered_mean]):
+        ax.text(i, v, f'{v:.1f}', ha='center', va='bottom')
+    st.pyplot(fig)
 
-# Kustomisasi grafik
-ax.set_xlabel('Temperatur')
-ax.set_ylabel('Kelembaban')
-ax.set_title('Clustering Berdasarkan Temperatur dan Kelembaban')
-ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-
-plt.tight_layout()
-
-# Tampilkan plot di Streamlit
-st.pyplot(fig3)
-
-# Tambahkan penjelasan
+# Display Explanation
 st.write("""
 ### Analisis Clustering:
-Berdasarkan analisis data, kondisi cuaca dengan temperatur tinggi dan
-kelembaban rendah (High_Low) terbukti Cuaca Hangat dan Kering paling
-optimal untuk mendukung aktivitas penyewaan. Kondisi ini diikuti oleh cuaca 
-dengan temperatur tinggi dan kelembaban sedang (High_Medium) yang juga menunjukkan
-performa baik. Sebaliknya, Cuaca dengan temperatur rendah, terutama yang disertai 
-kelembaban tinggi (Low_High), cenderung berkontribusi pada angka penyewaan yang lebih 
-rendah, kemungkinan disebabkan oleh kondisi yang kurang ideal untuk aktivitas luar ruangan.
+Berdasarkan analisis data, kondisi cuaca dengan temperatur tinggi dan kelembaban rendah (High_Low) terbukti cuaca hangat dan kering paling optimal untuk mendukung aktivitas penyewaan.
 """)
 
-# Tambahkan statistik cluster
+# Show Cluster Statistics Optionally
 if st.checkbox('Tampilkan Statistik Cluster'):
     st.write("### Statistik per Cluster")
     cluster_stats = hour_df.groupby('weather_cluster')['cnt'].agg(['count', 'mean', 'std']).round(2)
